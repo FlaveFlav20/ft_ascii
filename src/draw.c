@@ -3,7 +3,7 @@
 char *all_colors[10] = {RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET, MAGENTA, CYAN, WHITE};
 
 // checks if the pixel is on the border of the screen to draw a border
-static int check_border(int i, int MAX_COL, int MAX_ROW)
+int check_border(int i, int MAX_COL, int MAX_ROW)
 {
     if (i < MAX_COL || i > ((MAX_COL * MAX_ROW) - MAX_COL) || i % MAX_COL == 0 
             || i % MAX_COL == MAX_COL - 1){ 
@@ -12,9 +12,13 @@ static int check_border(int i, int MAX_COL, int MAX_ROW)
     return 0;
 }
 
+int check_terminal_border(term_t *t, int x, int y) {
+    return check_border((y * t->MAX_COL) + x, t->MAX_COL, t->MAX_ROW);
+}
+
 // Image to window - writes the buffer to the terminal
 // in one single write call
-static void img2win(term_t *t)
+void img2win(term_t *t)
 {
     size_t size = t->size * 8;
 
@@ -26,20 +30,28 @@ static void img2win(term_t *t)
     t->frame > 2048 ? t->frame = 1 : t->frame++;
 }
 
-static void background(term_t *t, int y)
-{
-    t->pixels[y].color = GREEN;
-    t->pixels[y].uni = " "; 
+void set_background_pixel(term_t *t, int x, int y,
+                          char *color, char *uni) {
+    int i = (y * t->MAX_COL) + x;
+    t->pixels[i].color = color;
+    t->pixels[i].uni = uni;
 }
 
 // Fills the pixel with the specified color and unicode character
 void map_pix(term_t *t, int x, int y, char *color, char *uni)
 {
     int i = (y * t->MAX_COL) + x;
+    t->pixels[i].uni = " ";
     fill_pixel(t->pixels, color, uni, i);
 }
 
-static void animated_border(term_t *t, int y)
+__attribute__((weak)) void background(term_t *t, int y)
+{
+    t->pixels[y].color = GREEN;
+    t->pixels[y].uni = " ";
+}
+
+__attribute__((weak)) void animated_border(term_t *t, int y)
 {
     float frequency = 0.1;   
     float phase_shift = t->frame * 0.1;
@@ -49,7 +61,7 @@ static void animated_border(term_t *t, int y)
 }
 
 // Draws a border and the content to the terminal with the specified draw_callback
-void draw(term_t *t, void (*draw_callback)(term_t *))
+ __attribute__((weak)) void draw(term_t *t, void (*draw_callback)(term_t *))
 {
     for(int y = 0; y < t->size; y++)
     {

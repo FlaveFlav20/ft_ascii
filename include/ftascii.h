@@ -55,6 +55,15 @@ typedef struct      term_s
 void                ft_ascii();
 void                init_term(term_t *t);
 void                draw(term_t *t, void (*f)(term_t*));
+void                animated_border(term_t *t, int y);
+
+int                 check_border(int i, int MAX_COL, int MAX_ROW);
+void                img2win(term_t *t);
+int                 check_terminal_border(term_t *t, int x, int y);
+void                background(term_t *t, int y);
+void                set_background_pixel(term_t *t, int x, int y,
+                                         char *color, char *uni);
+
 void                assign_pix_buff(char* buffer, Pixel* pixels,int size);
 void                fill_pixel(Pixel* pixels, char* color, char* uni, int i);
 void                putpix(Pixel* pixels, char* color, char* uni);

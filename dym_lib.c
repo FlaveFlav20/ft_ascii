@@ -1,0 +1,91 @@
+#include "ftascii.h"
+#include <signal.h>
+#include <locale.h>
+#include <time.h>
+#include <sys/stat.h>
+
+static term_t *term_pointer;
+
+static void handlectrl_c(int sig) {
+    (void)sig;
+    systemExit(term_pointer);
+}
+
+static void setup_signal_handlers() {
+    signal(SIGINT, handlectrl_c);
+    signal(SIGTERM, handlectrl_c);
+}
+
+static void initializeTerm(term_t *term)
+{
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+    srand(time(NULL));
+
+    setlocale(LC_ALL, "en_US.UTF-8");
+    system("stty -echo -icanon -icrnl time 0 min 0");
+
+    write(1, NOMOUSE, 6);  // Hide cursor
+    write(1, CLEAR, 4); // Clear screen
+    write(1, CURSOR, 6);
+
+    *term = (term_t){   w.ws_col, w.ws_row, w.ws_col * w.ws_row,
+                        NULL, NULL, NULL,
+                        1, 1, 1e6,0};
+
+    term_pointer = term;
+
+    init_term(term);
+    setup_signal_handlers();
+}
+
+static void draw_callback(term_t *term)
+{
+}
+
+void KeyPress(char *key, term_t *term) {
+    // Escape sequence for arroy keys
+    if (key[0] == '\033' && key[1] == '[') {
+        if (key[2] == ARROW_UP || key[2] == ARROW_RIGHT) {
+            // handle arrow up or right
+        } else if (key[2] == ARROW_DOWN || key[2] == ARROW_LEFT) {
+            // handle arrow down or left
+        }
+    } else {    // Regular keypress for single characters
+        switch (key[0]) {
+            case 27: // Dec value for escape
+                systemExit(term);
+                break;
+            case 'q':
+                systemExit(term);
+                break;
+            case 'p':
+                systemExit(term);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+int main() {
+    term_t *term = malloc(sizeof(term_t));
+
+    if (term == NULL) {
+        perror("Failed to allocate memory for term");
+        exit(EXIT_FAILURE);
+    }
+
+    initializeTerm(term);
+
+    while (term->draw)
+    {
+        ft_keyhook(term);
+        draw(term, &draw_callback);
+        usleep(term->delay);
+    }
+
+    systemExit(term);
+    return 0;
+}
