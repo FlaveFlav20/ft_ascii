@@ -41,7 +41,7 @@ void set_background_pixel(term_t *t, int x, int y,
 void map_pix(term_t *t, int x, int y, char *color, char *uni)
 {
     int i = (y * t->MAX_COL) + x;
-    t->pixels[i].uni = " ";
+
     fill_pixel(t->pixels, color, uni, i);
 }
 
@@ -56,8 +56,8 @@ __attribute__((weak)) void animated_border(term_t *t, int y)
     float frequency = 0.1;   
     float phase_shift = t->frame * 0.1;
     int color_index = (int)((sin(frequency * y + phase_shift) + 1) * 2) % 10;
-    t->pixels[y].color = all_colors[color_index];
-    t->pixels[y].uni = "█";
+
+    map_pix(t, y, 0, all_colors[color_index], "█");
 }
 
 // Draws a border and the content to the terminal with the specified draw_callback
@@ -74,7 +74,7 @@ __attribute__((weak)) void animated_border(term_t *t, int y)
             draw_callback(t);
         }                                                          
     }
-    
+
     // Write the buffer to the terminal
     assign_pix_buff(t->buffer, t->pixels, t->size); 
     img2win(t);

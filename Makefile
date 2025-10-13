@@ -31,7 +31,7 @@ STICKMAN_EXAMPLE_OBJ= $(OBJ_DIR)/stickman.o
 $(shell mkdir -p $(OBJ_DIR))
 
 # Default target
-all: $(LIB) $(EXAMPLE) $(DYN_LIB) $(STICKMAN_EXAMPLE)
+all: $(LIB) $(EXAMPLE)
 
 # Compile each source file into an object file
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c

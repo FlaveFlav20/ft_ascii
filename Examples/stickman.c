@@ -86,10 +86,10 @@ void KeyPress(char *key, term_t *term) {
     }
 }
 
+// Override the function in src/draw.c
 void animated_border(term_t *t, int y)
 {
     char *_all_colors[3] = {RED, ORANGE, YELLOW};
-
     float frequency = 0.1;
     float phase_shift = t->frame * 0.1;
     int color_index = (int)((sin(frequency * y + phase_shift) + 1) * 2) % 3;
@@ -97,6 +97,7 @@ void animated_border(term_t *t, int y)
     t->pixels[y].uni = "█";
 }
 
+// Override the function in src/draw.c
 void background(term_t *t, int y)
 {
     t->pixels[y].color = CYAN;
