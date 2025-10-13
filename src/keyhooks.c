@@ -1,6 +1,6 @@
 #include "ftascii.h"
 
-static void KeyPress(char *key, term_t *term) {
+__attribute__((weak)) void KeyPress(char *key, term_t *term) {
     // Escape sequence for arroy keys 
     if (key[0] == '\033' && key[1] == '[') {
         if (key[2] == ARROW_UP || key[2] == ARROW_RIGHT) {

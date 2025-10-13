@@ -61,6 +61,8 @@ void                putpix(Pixel* pixels, char* color, char* uni);
 void                map_pix(term_t *t, int x, int y, char *color, char *uni);
 
 /*      hooks       */
+
+void                KeyPress(char *key, term_t *term);
 void                handleKeyPress(char key, term_t *t);
 void                ft_keyhook(term_t *t);
 

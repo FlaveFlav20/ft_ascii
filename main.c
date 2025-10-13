@@ -85,6 +85,31 @@ static void draw_callback(term_t *term)
     draw_ball(term, &ball);
 }
 
+void KeyPress(char *key, term_t *term) {
+    // Escape sequence for arroy keys
+    if (key[0] == '\033' && key[1] == '[') {
+        if (key[2] == ARROW_UP || key[2] == ARROW_RIGHT) {
+            // handle arrow up or right
+        } else if (key[2] == ARROW_DOWN || key[2] == ARROW_LEFT) {
+            // handle arrow down or left
+        }
+    } else {    // Regular keypress for single characters
+        switch (key[0]) {
+            case 27: // Dec value for escape
+                systemExit(term);
+                break;
+            case 'q':
+                systemExit(term);
+                break;
+            case 'p':
+                systemExit(term);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 int main() {
     term_t *term = malloc(sizeof(term_t));
     
