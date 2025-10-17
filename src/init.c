@@ -1,6 +1,5 @@
 #include "ftascii.h"
 
-
 void init_term(term_t *t)
 {
     t->frame = 1;
