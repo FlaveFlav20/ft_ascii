@@ -59,6 +59,14 @@ void map_pix(term_t *t, int x, int y, char *color, char *uni);
 //   hooks
 void handleKeyPress(char key, term_t *t);
 void ft_keyhook(term_t *t);
+void                ft_ascii();
+void                init_term(term_t *t);
+void                initsigwin();
+void                draw(term_t *t, void (*f)(term_t*));
+void                assign_pix_buff(char* buffer, Pixel* pixels,int size);
+void                fill_pixel(Pixel* pixels, char* color, char* uni, int i);
+void                putpix(Pixel* pixels, char* color, char* uni);
+void                map_pix(term_t *t, int x, int y, char *color, char *uni);
 
 //	 utils
 void free_all(term_t *t);

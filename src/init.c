@@ -28,4 +28,6 @@ void init_term(term_t *t)
 	// Initialize buffer
 	memset(t->buffer, '.', t->size);
 	t->draw = true;
+
+	initsigwin();
 }

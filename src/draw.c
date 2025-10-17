@@ -1,6 +1,26 @@
 #include "ftascii.h"
 
+#include <stdbool.h>
+#include <signal.h>
+#include <sys/ioctl.h>
+
 char *all_colors[10] = {RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET, MAGENTA, CYAN, WHITE};
+
+bool sigwin = false;
+
+void sigwinchHandler(int sig) {
+    sigwin = true;
+}
+
+void initsigwin() {
+    struct sigaction sa;
+
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sa.sa_handler = sigwinchHandler;
+    if (sigaction(SIGWINCH, &sa, NULL) == -1)
+        exit(-1);
+}
 
 // checks if the pixel is on the border of the screen to draw a border
 static int check_border(int i, int MAX_COL, int MAX_ROW)
@@ -98,7 +118,9 @@ static void window_resize(term_t *t) {
 // Draws a border and the content to the terminal with the specified draw_callback
 void draw(term_t *t, void (*draw_callback)(term_t *))
 {
-    window_resize(t);
+    if (sigwin)
+        window_resize(t);
+
     for(int y = 0; y < t->size; y++)
     {
         // Border drawing with color changing animation

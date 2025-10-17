@@ -37,7 +37,6 @@ static void initializeTerm(term_t *term) {
                      1,
                      50000,
                      0};
->>>>>>> main
 
     term_pointer = term;
 
